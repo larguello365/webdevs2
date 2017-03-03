@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>CTA bus tracker</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.teal-blue.min.css" />
+        <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    </head>
+    <body>
+      <!-- Always shows a header, even in smaller screens. -->
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+  <header class="mdl-layout__header">
+    <div class="mdl-layout__header-row">
+      <!-- Title -->
+      <span class="mdl-layout-title">Lane Tech CTA Bus Tracker</span>
+      <!-- Add spacer, to align navigation to the right -->
+      <div class="mdl-layout-spacer"></div>
+      <!-- Navigation. We hide it in small screens. -->
+      </div>
+  </header> <br>
+  <main class="mdl-layout__content">
+    <div class="page-content">
+        <div id="r152"></div> <br>
+        <div id="r49"></div>  <br>
+        <div id="rX49"></div> <br>
+    </div>
+  </main>
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script>
+  /* global $ */
+  $(document).ready(function () {
+    var apiPassThruUrl = "https://polar-garden-75406.herokuapp.com/apiPassThru.php";
+          
+    var apiEndpoint = "http://www.ctabustracker.com/bustime/api/v2/getpredictions";
+          
+        $.ajax({
+              url: apiPassThruUrl,
+              dataType: "json",
+              method: 'GET',
+              data: {"apiEndpoint": apiEndpoint,
+                      "key" : "cKLtcvbtBXMETL5QGRjYaKVk5",
+                      "rt": "49,X49,152",
+                      "stpid": "12569,12525,8195,8417",
+                      "format":"json"
+              }
+            }).done (function (data) {
+                console.log(data);
+                $.each(data["bustime-response"]["prd"], function(i, v) {
+                    if (v.prdctdn === "DUE" || v.prdctdn === "DLY") {
+                        $("#r" + v.rt).append("Bus " + v.rt + " " + v.rtdir + " to "  + v.des + " is now " + v.prdctdn + ".<br>");
+                    }
+                    else{
+                       $("#r" + v.rt).append("Bus " + v.rt + " " + v.rtdir + " to "  + v.des + " will come in " + v.prdctdn + " minutes. <br>"); 
+                    }
+                    
+                });
+                
+              });
+
+            });
+       
+          
+         
+</script>
+</body>
+</html>

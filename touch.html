@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Touch</title>
+        <meta charset="UTF-8">
+        <meta name="msapplication-tap-highlight" content="no">
+        <style>
+            .btn {
+                background-color: #4285f4;
+                width: 100%;
+                -webkit-tap-highlight-color: transparent;
+                background-image: none;
+            }
+            
+            .btn:hover {
+                background-color: #296CDB;
+            }
+            
+            .btn:focus {
+                background-color: #0F52C1;
+                /* The outline parameter surpresses the border
+      color / outline when focused */
+                outline: 0;
+            }
+            
+            .btn:active {
+                background-color: #0039A8;
+            }
+            
+            .btn::-moz-focus-inner {
+                border: 0;
+            }
+            
+            body {
+                background-color: lightblue;
+            }
+          
+        </style>
+    </head>
+    
+    <body>
+            <button class="btn">Button 1</button><br><br>
+            <button class="btn">Button 2</button><br><br>
+            <button class="btn">Button 3</button><br><br>
+            <button class="btn">Button 4</button>
+    </body>
+</html>

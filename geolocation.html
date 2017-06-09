@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<!--Make an AJAX call to get lattitde and longitude coordinates of Divvy Bike stations-->
+<!--Once the call is done, get the person's location-->
+<!--Find the distance between the person's location and the location of the Divvy Bike stations-->
+<!--Find the top 5 closest stations to where the person is-->
+<html>
+
+<body>
+
+    <p>Click the button to get your coordinates.</p>
+
+    <button id="btn">Try It</button>
+
+    <div id="demo"></div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+        /* global $ */
+        /* global navigator */
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.watchPosition(showPosition);
+            }
+            else {
+                $("#demo").append("Geolocation is not supported by this browser.");
+
+            }
+        }
+
+        function showPosition(position) {
+            $("#demo").html("");
+            $("#demo").append("Latitude: " + position.coords.latitude + "<br>Longitude: " + position.coords.longitude);
+        }
+
+        $("#btn").on("click", getLocation);
+    </script>
+
+</body>
+
+</html>

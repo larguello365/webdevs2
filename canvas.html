@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Canvas</title>
+    <style>
+        canvas {
+            border: #333 10px solid;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="myCanvas" width="550px" height="320px"></canvas>
+<script>
+    /* global Image */
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+    ctx.beginPath();
+    var livesRemaining = 3;
+    var score = 0;
+    var level = 1;
+    var paused = false;
+    var player = {
+        x: 0,
+        y: 0,
+        costume: ""
+    };
+    var harm = {
+        x: 530,
+        y: Math.floor((Math.random() * 320) + 1),
+        costume: "",
+        speed: -1
+    };
+    var benefit = {
+        x: 530,
+        y: Math.floor((Math.random() * 320) + 1),
+        costume: "",
+        speed: -1
+    };
+    var background = new Image();
+    background.src = "space.jpeg";
+    /*
+      
+      main animation loop
+      
+    */
+    function animate() {
+        // clear canvas
+        ctx.clearRect(0, 0, c.width, c.height);
+        // update harm and benefit x coordinates
+        harm.x = harm.x + harm.speed;
+        benefit.x = benefit.x + benefit.speed;
+        // draw background
+        ctx.drawImage(background, 0, 0);
+        // draw player
+        ctx.beginPath();
+        ctx.fillStyle = "red";
+        ctx.arc(player.x, player.y, 30, 0, 2 * Math.PI);
+        ctx.fill();
+
+        // draw harm 
+        ctx.beginPath();
+        ctx.fillStyle = "blue";
+        ctx.arc(harm.x, harm.y, 30, 0, 2 * Math.PI);
+        ctx.fill();
+        // check for and handle edge condition
+        var ds = Math.pow(player.x - harm.x, 2) + Math.pow(player.y - harm.y, 2);
+        var distance = Math.sqrt(ds);
+        // check for and handle harm collision
+        if (distance < 60) {
+            livesRemaining -= 1;
+            console.log(livesRemaining);
+            harm.x = 530;
+            harm.y = Math.floor((Math.random() * 320) + 1);
+        }
+
+        if (harm.x < 0) {
+            harm.x = 530;
+            harm.y = Math.floor((Math.random() * 320) + 1);
+        }
+        // draw benefit
+        ctx.beginPath();
+        ctx.fillStyle = "green";
+        ctx.arc(benefit.x, benefit.y, 30, 0, 2 * Math.PI);
+        ctx.fill();
+        // check for and handle edge condition
+        var bds = Math.pow(player.x - benefit.x, 2) + Math.pow(player.y - benefit.y, 2);
+        var bdistance = Math.sqrt(bds);
+        // check for benefit collision
+        if (bdistance < 60) {
+            score += 5;
+            console.log(score);
+            benefit.x = 530;
+            benefit.y = Math.floor((Math.random() * 320) + 1);
+        }
+
+        if (benefit.x < 0) {
+            benefit.x = 530;
+            benefit.y = Math.floor((Math.random() * 320) + 1);
+        }
+        
+        if (score > 100) {
+            level += 1;
+            score = 0;
+            harm.speed -= 1;
+            benefit.speed -= 1;
+            harm.x = 530;
+            benefit.x = 530;
+        }
+        
+        if (livesRemaining == 0) {
+            paused = true;
+            ctx.clearRect(0, 0, c.width, c.height);
+            ctx.beginPath();
+            ctx.font = "30px Comic Sans MS";
+            ctx.fillStyle = "red";
+            ctx.textAlign = "center";
+            ctx.fillText("Game Over. Refresh to play again", c.width/2 , c.height/2);
+        }
+        // draw text (lives and score)
+        var scoretext = score.toString();
+        var livestext = livesRemaining.toString();
+        var leveltext = level.toString();
+        
+        ctx.beginPath();
+        ctx.font = "15px Comic Sans MS";
+        ctx.fillStyle = "orange";
+        ctx.fillText("Lives: " + livestext, 490, 15);
+        
+        ctx.beginPath();
+        ctx.font = "15px Comic Sans MS";
+        ctx.fillStyle = "purple";
+        ctx.fillText("Score: " + scoretext, 470, 35);
+        
+        ctx.beginPath();
+        ctx.font = "15px Comic Sans MS";
+        ctx.fillStyle = "yellow";
+        ctx.fillText("Level: " + leveltext, 490, 55);
+        //  if the game has not been paused, 
+        if (!paused) {
+            requestAnimationFrame(animate);
+        }
+        
+    }
+
+    animate();
+
+    //  event handler for moving player
+    //  use onKeyPress event, and change the player.y value based on the up/down keys
+
+    document.addEventListener("keydown", function(e) {
+
+        if (e.keyCode == 37) {
+            player.x -= 5;
+        }
+
+        if (e.keyCode == 38) {
+            player.y -= 5;
+        }
+
+        if (e.keyCode == 39) {
+            player.x += 5;
+        }
+
+        if (e.keyCode == 40) {
+            player.y += 5;
+        }
+        console.log(player);
+        
+    });
+</script>
+</body>
+
+</html>
